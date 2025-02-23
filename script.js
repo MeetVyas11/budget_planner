@@ -1,10 +1,11 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
 import { getDatabase, ref, push, onValue, remove, update } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
 
+// Firebase configuration
 const firebaseConfig = {
     apiKey: "AIzaSyC7ukSYaUnmGYYPSDV4TLboeGCofEHsYQA",
     authDomain: "budget-planner-fab32.firebaseapp.com",
-    databaseURL: "https://budget-planner-fab32-default-rtdb.firebaseio.com/", // Ensure this is correct
+    databaseURL: "https://budget-planner-fab32-default-rtdb.firebaseio.com/",
     projectId: "budget-planner-fab32",
     storageBucket: "budget-planner-fab32.firebasestorage.app",
     messagingSenderId: "296915913870",
@@ -12,10 +13,12 @@ const firebaseConfig = {
     measurementId: "G-EY5VY5L52Q"
 };
 
+// Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const database = getDatabase(app);
 const transactionsRef = ref(database, 'transactions');
 
+// Wait for the DOM to load
 document.addEventListener('DOMContentLoaded', function () {
     const transactionForm = document.getElementById('transaction-form');
     const descriptionInput = document.getElementById('description');
@@ -26,63 +29,43 @@ document.addEventListener('DOMContentLoaded', function () {
     const totalExpenses = document.getElementById('total-expenses');
     const netBalance = document.getElementById('net-balance');
 
-    let transactions = [];
-
+    // Add a new transaction
     transactionForm.addEventListener('submit', function (e) {
         e.preventDefault();
         const description = descriptionInput.value.trim();
         const amount = parseFloat(amountInput.value);
         const category = categoryInput.value;
 
-        if (description !== '' && !isNaN(amount)) {
-            push(transactionsRef, { description, amount, category })
-                .then(() => {
-                    console.log("Transaction added successfully!");
-                })
-                .catch((error) => {
-                    console.error("Error adding transaction:", error);
-                });
+        if (description && !isNaN(amount)) {
+            push(transactionsRef, { description, amount, category });
             descriptionInput.value = '';
             amountInput.value = '';
         } else {
-            console.error("Invalid input: Description or amount is missing.");
+            alert("Please enter a valid description and amount.");
         }
     });
 
+    // Listen for changes in the database
     onValue(transactionsRef, (snapshot) => {
-        transactions = [];
+        let income = 0;
+        let expenses = 0;
+        transactionList.innerHTML = '';
+
         snapshot.forEach((childSnapshot) => {
             const transaction = childSnapshot.val();
             transaction.id = childSnapshot.key;
-            transactions.push(transaction);
-        });
-        updateUI();
-    });
 
-    function updateUI() {
-        transactionList.innerHTML = '';
-        let income = 0;
-        let expenses = 0;
-
-        transactions.forEach((transaction) => {
+            // Create list item for each transaction
             const li = document.createElement('li');
             li.textContent = `${transaction.description}: $${transaction.amount} (${transaction.category})`;
+
+            // Add Edit button
             const editButton = document.createElement('button');
             editButton.textContent = 'Edit';
-            const deleteButton = document.createElement('button');
-            deleteButton.textContent = 'Delete';
-            li.appendChild(editButton);
-            li.appendChild(deleteButton);
-            transactionList.appendChild(li);
-
-            deleteButton.addEventListener('click', function () {
-                remove(ref(database, `transactions/${transaction.id}`));
-            });
-
-            editButton.addEventListener('click', function () {
+            editButton.addEventListener('click', () => {
                 const newDescription = prompt('Edit description:', transaction.description);
                 const newAmount = prompt('Edit amount:', transaction.amount);
-                if (newDescription !== null && newAmount !== null) {
+                if (newDescription && newAmount) {
                     update(ref(database, `transactions/${transaction.id}`), {
                         description: newDescription.trim(),
                         amount: parseFloat(newAmount)
@@ -90,6 +73,20 @@ document.addEventListener('DOMContentLoaded', function () {
                 }
             });
 
+            // Add Delete button
+            const deleteButton = document.createElement('button');
+            deleteButton.textContent = 'Delete';
+            deleteButton.addEventListener('click', () => {
+                alert ('Are you sure you want to delete this transaction?');
+                remove(ref(database, `transactions/${transaction.id}`));
+            });
+
+            // Append buttons to the list item
+            li.appendChild(editButton);
+            li.appendChild(deleteButton);
+            transactionList.appendChild(li);
+
+            // Calculate totals
             if (transaction.category === 'income') {
                 income += transaction.amount;
             } else {
@@ -97,8 +94,9 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         });
 
+        // Update summary
         totalIncome.textContent = income;
         totalExpenses.textContent = expenses;
         netBalance.textContent = income - expenses;
-    }
+    });
 });
