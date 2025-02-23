@@ -1,5 +1,13 @@
 {
+  "name": "budget-planner",
+  "version": "1.0.0",
+  "description": "A simple budget planner app",
+  "scripts": {
+    "start": "http-server -p 8080",
+    "build": "your-build-command-here"
+  },
   "dependencies": {
-    "firebase": "^11.3.1"
+    "firebase": "^11.3.1",
+    "http-server": "^14.1.1"
   }
 }
