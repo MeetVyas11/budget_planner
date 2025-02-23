@@ -1,0 +1,27 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 20px;
+}
+h1 {
+    color: #333;
+}
+#transaction-form {
+    margin-bottom: 20px;
+}
+#transaction-list li {
+    margin: 10px 0;
+}
+button {
+    margin-left: 10px;
+}
+#summary {
+    margin-top: 20px;
+}
+@media (max-width: 600px) {
+    body {
+        margin: 10px;
+    }
+    h1 {
+        font-size: 24px;
+    }
+}
