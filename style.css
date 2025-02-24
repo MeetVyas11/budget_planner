@@ -13,20 +13,93 @@ body {
     padding-top: 20px;
 }
 
+/* Auth Container */
+#auth-container {
+    background: #32354a;
+    padding: 2rem;
+    border-radius: 10px;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+    width: 100%;
+    max-width: 500px;
+    margin: 0 auto;
+}
+
+#auth-container h1 {
+    color: #ff8c42;
+    margin-bottom: 1.5rem;
+    font-size: 4rem;
+    font-weight: 600;
+}
+
+#auth-container form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+#auth-container input {
+    padding: 1rem;
+    border-radius: 8px;
+    font-size: 1.5rem;
+    border: 1px solid #555;
+    background: #40445e;
+    color: #f5f5f5;
+}
+
+#auth-container input:focus {
+    border-color: #ff8c42;
+    box-shadow: 0 0 10px rgba(255, 140, 66, 0.4);
+}
+
+#auth-container button {
+    background: #ff8c42;
+    color: #fff;
+    cursor: pointer;
+    font-weight: 600;
+    padding: 1rem;
+    border: none;
+    border-radius: 8px;
+}
+
+#auth-container button:hover {
+    background: #e76b25;
+}
+
+#auth-container p {
+    margin-top: 1rem;
+    font-size: 0.9rem;
+}
+
+#auth-container a {
+    color: #ff8c42;
+    text-decoration: none;
+}
+
+#auth-container a:hover {
+    text-decoration: underline;
+}
+
+/* App Container */
+#app-container {
+    display: none; /* Initially hidden */
+    width: 100%;
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
 /* Main Container */
 .main-container {
     display: flex;
     flex-direction: column;
-    gap: 10px;
-    width: 50%;
-    max-width: 1100px;
-    margin: 0 auto;
+    gap: 15px; 
+    width: 100%;
 }
 
 /* Section Styling */
 .container {
     background: #32354a;
-    padding: 0.5rem;
+    padding: 1.2rem; 
     border-radius: 10px;
     box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
 }
@@ -34,20 +107,20 @@ body {
 h1 {
     color: #ff8c42;
     margin-bottom: 1.5rem;
-    font-size: 3rem;
+    font-size: 2.5rem;
     font-weight: 600;
 }
 
 /* Form Section */
 #transaction-form {
     display: grid;
-    gap: 1.5rem;
+    gap: 1.2rem; 
     margin-bottom: 10px;
 }
 
 /* Input Fields */
 input, select, button {
-    padding: 0.9rem;
+    padding: 0.8rem; 
     border-radius: 8px;
     font-size: 1rem;
     border: 1px solid #555;
@@ -66,7 +139,9 @@ button {
     color: #fff;
     cursor: pointer;
     font-weight: 600;
-    padding: 1rem;
+    padding: 0.9rem; 
+    border: none;
+    border-radius: 8px;
 }
 
 button:hover {
@@ -83,18 +158,19 @@ button:hover {
 
 #transaction-list li {
     background: #40445e;
-    padding: 1.2rem;
+    padding: 1rem; 
     border-radius: 8px;
-    margin-bottom: 12px;
+    margin-bottom: 10px; 
     display: flex;
     justify-content: space-between;
     align-items: center;
+    font-size: 1.1rem; 
 }
 
 /* Buttons inside the transaction list */
 #transaction-list li button {
-    margin-left: 0.5rem; /* Reduced margin between buttons */
-    padding: 0.6rem 1rem; /* Slightly smaller padding */
+    margin-left: 0.5rem;
+    padding: 0.6rem 1rem;
     border-radius: 6px;
     font-size: 0.9rem;
     font-weight: 500;
@@ -121,7 +197,7 @@ button:hover {
 /* Summary Section */
 #summary {
     background: #40445e;
-    padding: 1.5rem;
+    padding: 1.2rem; 
     border-radius: 8px;
     text-align: center;
 }
@@ -137,6 +213,25 @@ button:hover {
     color: #ff8c42;
 }
 
+/* Logout Button */
+#logout-button {
+    background: #ff4d4d;
+    color: #fff;
+    border: none;
+    padding: 0.8rem 1.2rem;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 1rem;
+    position: fixed;
+    top: 20px;
+    right: 20px;
+}
+
+#logout-button:hover {
+    background: #cc0000;
+}
+
 /* Responsive Design */
 @media (max-width: 768px) {
     .main-container {
@@ -144,11 +239,11 @@ button:hover {
     }
 
     h1 {
-        font-size: 1.75rem;
+        font-size: 2rem;
     }
 
     .container {
-        padding: 1.5rem;
+        padding: 1rem;
     }
 
     #transaction-form {
@@ -162,7 +257,7 @@ button:hover {
 
     #transaction-list li {
         padding: 1rem;
-        font-size: 0.95rem;
+        font-size: 1rem; /* Adjusted font size for smaller screens */
     }
 
     #summary h2 {
@@ -172,7 +267,7 @@ button:hover {
 
 @media (max-width: 480px) {
     h1 {
-        font-size: 1.5rem;
+        font-size: 1.75rem;
     }
 
     .container {
@@ -186,7 +281,7 @@ button:hover {
 
     #transaction-list li {
         padding: 0.8rem;
-        font-size: 0.9rem;
+        font-size: 0.95rem; /* Adjusted font size for smaller screens */
     }
 
     #summary h2 {

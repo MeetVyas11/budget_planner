@@ -8,35 +8,61 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div class="main-container">
-        <div class="container">
-            <h1>Budget Planner</h1>
-            <form id="transaction-form">
-                <input type="text" id="description" placeholder="Description" required>
-                <input type="number" id="amount" placeholder="Amount" required>
-                <select id="category">
-                    <option value="income">Income</option>
-                    <option value="food">Food</option>
-                    <option value="transportation">Transportation</option>
-                    <option value="entertainment">Entertainment</option>
-                    <option value="other">Other</option>
-                </select>
-                <button type="submit">Add Transaction</button>
-            </form>
-        </div>
-        <div class="container">
-            <ul id="transaction-list"></ul>
-        </div>
-        <div class="container">
-            <div id="summary">
-                <h2>Monthly Summary</h2>
-                <p>Total Income: <span id="total-income">0</span></p>
-                <p>Total Expenses: <span id="total-expenses">0</span></p>
-                <p>Net Balance: <span id="net-balance">0</span></p>
-            </div>
-        </div>
+    <!-- Auth Container (Visible by Default) -->
+    <div id="auth-container">
+        <h1>Budget Planner</h1>
+        <!-- Login Form -->
+        <form id="login-form">
+            <input type="email" id="email-login" placeholder="Email" required>
+            <input type="password" id="password-login" placeholder="Password" required>
+            <button type="submit">Log In</button>
+            <p>Don't have an account? <a href="#" id="toggle-signup">Sign Up</a></p>
+            <p>Please login or sign up for tracking your Budget</p>
+        </form>
+
+        <!-- Signup Form (Hidden by Default) -->
+        <form id="signup-form" style="display: none;">
+            <input type="email" id="email-signup" placeholder="Email" required>
+            <input type="password" id="password-signup" placeholder="Password" required>
+            <button type="submit">Sign Up</button>
+            <p>Already have an account? <a href="#" id="toggle-login">Log In</a></p>
+        </form>
     </div>
 
+    <!-- Budget Planner App (Hidden by Default) -->
+    <div id="app-container" style="display: none;">
+        <div class="main-container">
+            <div class="container">
+                <h1>Budget Planner</h1>
+                <form id="transaction-form">
+                    <input type="text" id="description" placeholder="Description" required>
+                    <input type="number" id="amount" placeholder="Amount" required>
+                    <select id="category">
+                        <option value="income">Income</option>
+                        <option value="food">Food</option>
+                        <option value="transportation">Transportation</option>
+                        <option value="entertainment">Entertainment</option>
+                        <option value="other">Other</option>
+                    </select>
+                    <button type="submit">Add Transaction</button>
+                </form>
+            </div>
+            <div class="container">
+                <ul id="transaction-list"></ul>
+            </div>
+            <div class="container">
+                <div id="summary">
+                    <h2>Monthly Summary</h2>
+                    <p>Total Income: <span id="total-income">0</span></p>
+                    <p>Total Expenses: <span id="total-expenses">0</span></p>
+                    <p>Net Balance: <span id="net-balance">0</span></p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Logout Button -->
+        <button id="logout-button" style="position: fixed; top: 20px; right: 20px;">Log Out</button>
+    </div>
 
     <script type="module" src="script.js"></script>
 </body>
