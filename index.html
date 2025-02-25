@@ -17,7 +17,6 @@
             <input type="password" id="password-login" placeholder="Password" required>
             <button type="submit">Log In</button>
             <p>Don't have an account? <a href="#" id="toggle-signup">Sign Up</a></p>
-            <p>Please login or sign up for tracking your Budget</p>
         </form>
 
         <!-- Signup Form (Hidden by Default) -->
@@ -48,7 +47,6 @@
                 </form>
             </div>
             <div class="container">
-                <h3>Transaction-List</h3>
                 <ul id="transaction-list"></ul>
             </div>
             <div class="container">
@@ -63,6 +61,19 @@
 
         <!-- Logout Button -->
         <button id="logout-button" style="position: fixed; top: 20px; right: 20px;">Log Out</button>
+
+        <!-- Chatbot UI -->
+        <div id="chatbot-container" style="position: fixed; bottom: 20px; right: 10px; width: 300px; background: #32354a; border-radius: 10px; box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);">
+            <div id="chatbot-header" style="padding: 10px; background: #40445e; border-top-left-radius: 10px; border-top-right-radius: 10px; cursor: pointer;">
+                <h3 style="margin: 0; color: #ff8c42;">AI Chatbot</h3>
+            </div>
+            <div id="chatbot-body" style="padding: 10px; height: 200px; overflow-y: auto; display: none;">
+                <div id="chatbot-messages"></div>
+            </div>
+            <div id="chatbot-input" style="padding: 10px; display: none;">
+                <input type="text" id="chatbot-user-input" placeholder="Type your message..." style="width: 100%; padding: 0.5rem; border-radius: 8px; border: 1px solid #555; background: #40445e; color: #f5f5f5;">
+            </div>
+        </div>
     </div>
 
     <script type="module" src="script.js"></script>
