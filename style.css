@@ -80,7 +80,7 @@ body {
 
 /* App Container */
 #app-container {
-    display: none; /* Initially hidden */
+    display: none; 
     width: 100%;
     max-width: 750px;
     margin: 0 auto;
@@ -257,7 +257,7 @@ button:hover {
 
     #transaction-list li {
         padding: 1rem;
-        font-size: 1rem; /* Adjusted font size for smaller screens */
+        font-size: 1rem; 
     }
 
     #summary h2 {
@@ -281,7 +281,7 @@ button:hover {
 
     #transaction-list li {
         padding: 0.8rem;
-        font-size: 0.95rem; /* Adjusted font size for smaller screens */
+        font-size: 0.95rem; 
     }
 
     #summary h2 {
