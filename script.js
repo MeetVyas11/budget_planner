@@ -19,7 +19,9 @@ const app = initializeApp(firebaseConfig);
 const database = getDatabase(app);
 const auth = getAuth(app);
 
-// Wait for the DOM to load
+// API Key
+const OPENAI_API_KEY = "AIzaSyApO_9jX01687KgQpZweOKNNb7nF-7_DuI"; 
+
 document.addEventListener('DOMContentLoaded', function () {
     const authContainer = document.getElementById('auth-container');
     const appContainer = document.getElementById('app-container');
@@ -38,61 +40,113 @@ document.addEventListener('DOMContentLoaded', function () {
     const totalExpenses = document.getElementById('total-expenses');
     const netBalance = document.getElementById('net-balance');
 
-    // Toggle between Login and Signup forms
-    toggleSignup.addEventListener('click', (e) => {
-        e.preventDefault();
-        loginForm.style.display = 'none';
-        signupForm.style.display = 'block';
+    // Chatbot Elements
+    const chatbotHeader = document.getElementById('chatbot-header');
+    const chatbotBody = document.getElementById('chatbot-body');
+    const chatbotInput = document.getElementById('chatbot-input');
+    const chatbotMessages = document.getElementById('chatbot-messages');
+    const chatbotUserInput = document.getElementById('chatbot-user-input');
+
+    // Toggle Chatbot Visibility
+    chatbotHeader.addEventListener('click', () => {
+        if (chatbotBody.style.display === 'none') {
+            chatbotBody.style.display = 'block';
+            chatbotInput.style.display = 'block';
+        } else {
+            chatbotBody.style.display = 'none';
+            chatbotInput.style.display = 'none';
+        }
     });
 
-    toggleLogin.addEventListener('click', (e) => {
-        e.preventDefault();
-        signupForm.style.display = 'none';
-        loginForm.style.display = 'block';
+    // Handle Chatbot User Input
+    chatbotUserInput.addEventListener('keypress', async (e) => {
+        if (e.key === 'Enter') {
+            const userMessage = chatbotUserInput.value.trim();
+            if (userMessage) {
+                // Display user message
+                appendMessage('user', userMessage);
+                chatbotUserInput.value = '';
+
+                // Show loading indicator
+                appendMessage('ai', 'Thinking...');
+
+                // Handle specific commands
+                if (!handleBudgetCommands(userMessage)) {
+                    // Get AI response for general queries
+                    const aiResponse = await getAIResponse(userMessage);
+                    // Remove the "Thinking..." message
+                    chatbotMessages.lastChild.remove();
+                    appendMessage('ai', aiResponse);
+                }
+            }
+        }
     });
 
-    // Handle User Login
-    loginForm.addEventListener('submit', (e) => {
-        e.preventDefault();
-        const email = document.getElementById('email-login').value.trim();
-        const password = document.getElementById('password-login').value.trim();
+    // Function to append messages to the chat
+    function appendMessage(sender, message) {
+        const messageElement = document.createElement('div');
+        messageElement.className = `chat-message ${sender}`;
+        messageElement.textContent = `${sender === 'user' ? 'You: ' : 'AI: '}${message}`;
+        chatbotMessages.appendChild(messageElement);
+        chatbotBody.scrollTop = chatbotBody.scrollHeight; // Auto-scroll to bottom
+    }
 
-        signInWithEmailAndPassword(auth, email, password)
-            .then((userCredential) => {
-                alert('Logged in successfully!');
-                loginForm.reset();
-            })
-            .catch((error) => {
-                alert(`Error: ${error.message}`);
+    // Function to handle budget-specific commands
+    function handleBudgetCommands(request) {
+        if (request.startsWith("add transaction")) {
+            const parts = request.replace("add transaction", "").trim().split(" ");
+            const amount = parseFloat(parts[0]);
+            const category = parts[1];
+            const description = parts.slice(2).join(" ");
+
+            if (amount && category && description) {
+                addTransaction(description, amount, category);
+                appendMessage('ai', `Added transaction: $${amount} for ${category} (${description})`);
+            } else {
+                appendMessage('ai', "Please provide a valid transaction format: 'add transaction [amount] [category] [description]'");
+            }
+            return true;
+        } else if (request.startsWith("show summary")) {
+            appendMessage('ai', `Total Income: $${totalIncome.textContent}, Total Expenses: $${totalExpenses.textContent}, Net Balance: $${netBalance.textContent}`);
+            return true;
+        }
+
+        return false;
+    }
+
+    // Function to get AI response using OpenAI API
+    async function getAIResponse(request) {
+        try {
+            const response = await fetch("https://api.openai.com/v1/chat/completions", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${OPENAI_API_KEY}`,
+                },
+                body: JSON.stringify({
+                    model: "gpt-3.5-turbo", // Use GPT-3.5 Turbo
+                    messages: [{ role: "user", content: request }],
+                }),
             });
-    });
 
-    // Handle User Signup
-    signupForm.addEventListener('submit', (e) => {
-        e.preventDefault();
-        const email = document.getElementById('email-signup').value.trim();
-        const password = document.getElementById('password-signup').value.trim();
+            const data = await response.json();
+            return data.choices[0].message.content;
+        } catch (error) {
+            console.error("Error fetching AI response:", error);
+            return "Sorry, I couldn't process your request. Please try again.";
+        }
+    }
 
-        createUserWithEmailAndPassword(auth, email, password)
-            .then((userCredential) => {
-                alert('User created successfully!');
-                signupForm.reset();
-            })
-            .catch((error) => {
-                alert(`Error: ${error.message}`);
-            });
-    });
-
-    // Handle User Logout
-    logoutButton.addEventListener('click', () => {
-        signOut(auth)
-            .then(() => {
-                alert('Logged out successfully!');
-            })
-            .catch((error) => {
-                alert(`Error: ${error.message}`);
-            });
-    });
+    // Add a new transaction
+    function addTransaction(description, amount, category) {
+        const user = auth.currentUser;
+        if (user) {
+            const userTransactionsRef = ref(database, `users/${user.uid}/transactions`);
+            push(userTransactionsRef, { description, amount, category });
+        } else {
+            alert("User not logged in.");
+        }
+    }
 
     // Monitor Authentication State
     onAuthStateChanged(auth, (user) => {
@@ -112,28 +166,6 @@ document.addEventListener('DOMContentLoaded', function () {
             totalIncome.textContent = '0';
             totalExpenses.textContent = '0';
             netBalance.textContent = '0';
-        }
-    });
-
-    // Add a new transaction
-    transactionForm.addEventListener('submit', function (e) {
-        e.preventDefault();
-        const description = descriptionInput.value.trim();
-        const amount = parseFloat(amountInput.value);
-        const category = categoryInput.value;
-
-        if (description && !isNaN(amount)) {
-            const user = auth.currentUser;
-            if (user) {
-                const userTransactionsRef = ref(database, `users/${user.uid}/transactions`);
-                push(userTransactionsRef, { description, amount, category });
-                descriptionInput.value = '';
-                amountInput.value = '';
-            } else {
-                alert("User not logged in.");
-            }
-        } else {
-            alert("Please enter a valid description and amount.");
         }
     });
 
@@ -196,4 +228,63 @@ document.addEventListener('DOMContentLoaded', function () {
             netBalance.textContent = income - expenses;
         });
     }
+
+    // Handle User Login
+    loginForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const email = document.getElementById('email-login').value.trim();
+        const password = document.getElementById('password-login').value.trim();
+
+        signInWithEmailAndPassword(auth, email, password)
+            .then((userCredential) => {
+                alert('Logged in successfully!');
+                loginForm.reset();
+            })
+            .catch((error) => {
+                alert(`Error: ${error.message}`);
+            });
+    });
+
+    // Handle User Signup
+    signupForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const email = document.getElementById('email-signup').value.trim();
+        const password = document.getElementById('password-signup').value.trim();
+
+        createUserWithEmailAndPassword(auth, email, password)
+            .then((userCredential) => {
+                alert('User created successfully!');
+                signupForm.reset();
+            })
+            .catch((error) => {
+                alert(`Error: ${error.message}`);
+            });
+    });
+
+    // Handle User Logout
+    logoutButton.addEventListener('click', () => {
+        signOut(auth)
+            .then(() => {
+                alert('Logged out successfully!');
+            })
+            .catch((error) => {
+                alert(`Error: ${error.message}`);
+            });
+    });
+
+    // Add a new transaction via form
+    transactionForm.addEventListener('submit', function (e) {
+        e.preventDefault();
+        const description = descriptionInput.value.trim();
+        const amount = parseFloat(amountInput.value);
+        const category = categoryInput.value;
+
+        if (description && !isNaN(amount)) {
+            addTransaction(description, amount, category);
+            descriptionInput.value = '';
+            amountInput.value = '';
+        } else {
+            alert("Please enter a valid description and amount.");
+        }
+    });
 });
