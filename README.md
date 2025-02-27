@@ -1,7 +1,7 @@
 BUDGET PLANNER <br />
 Budget Planner App is a web app that helps one to manage finances well. It helps users to track spending and income, view an overview of their budget, and consult an AI-powered chatbot for assistance. Written with Firebase to handle backend actions and OpenAI's GPT-3.5 Turbo to power the chatbot, the app provides seamless user interaction
 
-FEATURES
+FEATURES <br />
 1.User Authentication:Sign up, login, and logout securely with Firebase Authentication.
 2.Transaction Management:Add, edit, and remove a transaction.
 3.Budget Summary:View total income, total expenses, and net balance.
@@ -9,7 +9,7 @@ FEATURES
 Ask open-ended questions and get AI-generated answers.
 5.Real-Time Updates:Transactions and budget summaries are updated in real-time via Firebase Realtime Database.
 
-TECHNOLOGIES USED 
+TECHNOLOGIES USED <br />
 1.Frontend:
 HTML, CSS, JavaScript
 2.Backend:Firebase Authentication,Firebase Realtime Database
