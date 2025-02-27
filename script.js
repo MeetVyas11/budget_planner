@@ -259,7 +259,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 addTransaction(description, amount, category);
                 appendMessage('ai', `Added transaction: $${amount} for ${category} (${description})`);
             } else {
-                appendMessage('ai', "Please provide a valid transaction formattto Add : 'add transaction [amount] [category] [description]'");
+                appendMessage('ai', "Please provide a valid transaction format to Add a Transaction: 'add transaction [amount] [category] [description]'");
             }
             return true;
         } else if (request.startsWith("show summary")) {
