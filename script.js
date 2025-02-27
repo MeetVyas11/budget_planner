@@ -19,7 +19,7 @@ const app = initializeApp(firebaseConfig);
 const database = getDatabase(app);
 const auth = getAuth(app);
 
-// OpenAI API Key
+// AI API Key
 const OPENAI_API_KEY = "AIzaSyApO_9jX01687KgQpZweOKNNb7nF-7_DuI"; 
 
 // Wait for the DOM to load
@@ -226,15 +226,11 @@ document.addEventListener('DOMContentLoaded', function () {
                 // Display user message
                 appendMessage('user', userMessage);
                 chatbotUserInput.value = '';
-
-                // Show loading indicator
                 appendMessage('ai', 'Thinking...');
 
                 // Handle specific commands
                 if (!handleBudgetCommands(userMessage)) {
-                    // Get AI response for general queries
                     const aiResponse = await getAIResponse(userMessage);
-                    // Remove the "Thinking..." message
                     chatbotMessages.lastChild.remove();
                     appendMessage('ai', aiResponse);
                 }
@@ -263,7 +259,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 addTransaction(description, amount, category);
                 appendMessage('ai', `Added transaction: $${amount} for ${category} (${description})`);
             } else {
-                appendMessage('ai', "Please provide a valid transaction format: 'add transaction [amount] [category] [description]'");
+                appendMessage('ai', "Please provide a valid transaction formattto Add : 'add transaction [amount] [category] [description]'");
             }
             return true;
         } else if (request.startsWith("show summary")) {
@@ -295,7 +291,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     "Authorization": `Bearer ${OPENAI_API_KEY}`,
                 },
                 body: JSON.stringify({
-                    model: "gpt-3.5-turbo", // Use GPT-3.5 Turbo
+                    model: "gpt-3.5-turbo", 
                     messages: [{ role: "user", content: request }],
                 }),
             });
