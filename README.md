@@ -32,7 +32,7 @@ Edit a Transaction:Click the "Edit" button next to a transaction and update the 
 Delete a Transaction:Click the "Delete" button next to a transaction to remove it.
 
 3.Budget Summary<br />
-View the Total Income, Total Expenses, and Net Balance at the top of the app.
+View the Total Income, Total Expenses, and Net Balance at the bottom of the app.
 
 4.Chatbot<br />
 Add Transactions via Chatbot:
